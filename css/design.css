@@ -1,0 +1,98 @@
+/* Hide dynamic elements at outset */
+
+#form1 { display: none; }
+#form2 { display: none; }
+
+/* Actual page style */
+
+body {
+	background-color: #f5f5f4;
+	color: #babec1;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding: 0px;
+	margin: 0px;
+	overflow-y: auto;
+}
+
+.thingyView {
+	display: inline-block;
+	text-align: center;
+	padding: 5px;
+}
+
+.thingyView img {
+	display: block;
+	cursor: pointer;
+}
+
+.thingyView .btns {
+	display: block;
+	padding-top: 4px;
+}
+
+.stepView .name {
+	padding-top: 15px;
+	font-size: 2em;
+	font-weight: bold;
+}
+
+#AppView {
+	overflow: hidden;
+	text-align: center;
+	background-color: #f5f5f4;
+	color: #babec1;
+}
+
+.icons {
+	padding: 10px;
+}
+
+#orange-mobile {
+	height: 100px;
+	background-color: #f05a28;
+	background-image: url('../img/orange-header.png');
+	background-position: center center;
+}
+
+#footer {
+}
+
+#application-nav {
+	background-color: #e2e2df;
+}
+
+#nav-left {
+	float: left;
+}
+
+#nav-right {
+	float: right;
+}
+
+#nav-back {
+	background-image: url('../img/back.png') no-repeat;
+	width: 60px;
+	height: 60px;
+}
+#nav-restart {
+	background-image: url('../img/back.png') no-repeat;
+	width: 60px;
+	height: 60px;
+}
+
+.ourbutton {
+	border: none;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+form {
+	min-height: 300px;
+	padding: 30px;
+}
+
+input[type=text] {
+	height: 37px;
+}
+

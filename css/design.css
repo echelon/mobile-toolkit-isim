@@ -96,3 +96,19 @@ input[type=text] {
 	height: 37px;
 }
 
+
+.avgrund-popup {
+	color: #111;
+}
+
+.modal-buttons {
+	margin-top: 20px;
+}
+
+.modal-buttons-left {
+	float: left;
+}
+
+.modal-buttons-right {
+	float: right;
+}

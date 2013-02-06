@@ -101,22 +101,29 @@ var ModalView = Backbone.View.extend({
 				'<p>' +
 					this.model.get('description') +
 				'</p>' +
-				'<div class="modal-buttons">'
+				'<div class="modal-buttons row-fluid"></div>'
 			);
 
 	},
 
 	render: function() {
-		var btn = null;
+		var btn = '<div class="modal-buttons-left">';
 		if(this.model.get('added')) {
-			btn = '<div class="btn removeCart">Remove</div>';
+			btn += '<button class="btn btn-primary ' +
+					'removeCart">Remove</button>';
 		}
 		else {
-			btn = '<div class="btn addCart">Add</div>';
+			btn += '<button class="btn btn-primary ' +
+					'addCart">Add</button>';
 		}
 		this.$el.find('.modal-buttons').html(
 				btn + 
-				'<div class="btn closeCart">Close</div>'
+				'</div>' +
+				'<div class="modal-buttons-right">' +
+					'<button class="btn btn-primary ' +
+						'closeCart">Close</button>' +
+				'</div>' +
+            	'<div class="clearfix"></div>'
 			);
 	},
 

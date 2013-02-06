@@ -634,7 +634,7 @@ var AppView = Backbone.View.extend({
 				var t = new Item({
 					name: it.name,
 					title: it.title,
-					//description: it.descr,
+					description: it.descr,
 					img: it.img,
 					imgAdded: it.imgAdded,
 				});
@@ -659,21 +659,21 @@ var AppView = Backbone.View.extend({
 			{
 				name: 'ios',
 				title: 'iOS',
-				descr: '',
+				descr: 'iOS is the foundation of iPad, and iPod touch devices and fits perfectly in the education space.  Unsurpassed content creation ability, mixed with simplicity and stability, make iOS devices a common choice for mobile learning.',
 				img: 'img/items/apple-off.png',
 				imgAdded: 'img/items/apple-on.png',
 			}, 
 			{
 				name: 'android',
 				title: 'Android',
-				descr: '',
+				descr: 'A customizable, open source OS that is run on a variety of education ready devices such as Galaxy Tab series, and the Nexus series.  Android OS allows for versatile and economical choices to fit any classroom.',
 				img: 'img/items/android-off.png',
 				imgAdded: 'img/items/android-on.png',
 			}, 
 			{
 				name: 'windows',
 				title: 'Windows',
-				descr: '',
+				descr: 'Windows 8 OS is comfortable and sleek and works on Microsoft Surface tablet.  Microsoft office and USB input make PC to tablet conversions seamless.',
 				img: 'img/items/windows-off.png',
 				imgAdded: 'img/items/windows-on.png',
 			}, 
@@ -702,6 +702,40 @@ var AppView = Backbone.View.extend({
 				imgAdded: 'img/accessory/stylus-on.png',
 			}
 		]);
+
+		makeStep('Choose your services.', [
+			{
+				name: 'pd',
+				title: 'Professional Development',
+				descr: '',
+				img: 'img/services/professional-development-off.png',
+				imgAdded: 
+					 'img/services/professional-development-on.png',
+			},
+			{
+				name: 'tech',
+				title: 'Tech Support',
+				descr: '',
+				img: 'img/services/tech-support-off.png',
+				imgAdded: 'img/services/tech-support-on.png',
+			},
+			{
+				name: 'management',
+				title: 'Management',
+				descr: '',
+				img: 'img/services/device-management-off.png',
+				imgAdded: 'img/services/device-management-on.png',
+			}, 
+			{
+				name: 'assessment',
+				title: 'Online Assessment',
+				descr: '',
+				img: 'img/services/online-assessment-off.png',
+				imgAdded: 'img/services/online-assessment-on.png',
+			}
+
+		]);
+
 
 		///////// FORM ONE
 		

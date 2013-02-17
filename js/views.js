@@ -666,21 +666,21 @@ var AppView = Backbone.View.extend({
 			{
 				name: 'ios',
 				title: 'iOS',
-				descr: 'iOS is the foundation of iPad, and iPod touch devices and fits perfectly in the education space.  Unsurpassed content creation ability, mixed with simplicity and stability, make iOS devices a common choice for mobile learning.',
+				descr: 'iOS is the foundation of iPad, and iPod touch devices and fits perfectly in the education space. Unsurpassed content creation ability, mixed with simplicity and stability, make iOS devices a common choice for mobile learning.',
 				img: 'img/items/apple-off.png',
 				imgAdded: 'img/items/apple-on.png',
 			}, 
 			{
 				name: 'android',
 				title: 'Android',
-				descr: 'A customizable, open source OS that is run on a variety of education ready devices such as Galaxy Tab series, and the Nexus series.  Android OS allows for versatile and economical choices to fit any classroom.',
+				descr: 'A customizable, open source OS that is run on a variety of education ready devices such as Galaxy Tab series, and the Nexus series. Android OS allows for versatile and economical choices to fit any classroom.',
 				img: 'img/items/android-off.png',
 				imgAdded: 'img/items/android-on.png',
 			}, 
 			{
 				name: 'windows',
 				title: 'Windows',
-				descr: 'Windows 8 OS is comfortable and sleek and works on Microsoft Surface tablet.  Microsoft office and USB input make PC to tablet conversions seamless.',
+				descr: 'Windows 8 OS is comfortable and sleek and works on Microsoft Surface tablet. Microsoft office and USB input make PC to tablet conversions seamless.',
 				img: 'img/items/windows-off.png',
 				imgAdded: 'img/items/windows-on.png',
 			}, 
@@ -690,21 +690,21 @@ var AppView = Backbone.View.extend({
 			{
 				name: 'cases',
 				title: 'Cases',
-				descr: '',
+				descr: 'The current leader in protective casing, Otter Box\'s quality products are designed to fit almost any mobile device. They are your first, best and cheapest insurance policy.',
 				img: 'img/accessory/cases-off.png',
 				imgAdded: 'img/accessory/cases-on.png',
 			}, 
 			{
 				name: 'cloth',
 				title: 'Microfiber Cloth',
-				descr: '',
+				descr: 'Nobody likes a smudgy screen. Keep it clean while at the same time supporting iSchool Initiative and the movement for mobile learning.',
 				img: 'img/accessory/mf-cloth-off.png',
 				imgAdded: 'img/accessory/mf-cloth-on.png',
 			},
 			{
 				name: 'stylus',
 				title: 'Styluses',
-				descr: '',
+				descr: 'Using a stylus helps students in many areas including note taking, art, math and content creation. Make every detail perfect.',
 				img: 'img/accessory/stylus-off.png',
 				imgAdded: 'img/accessory/stylus-on.png',
 			}
@@ -714,7 +714,7 @@ var AppView = Backbone.View.extend({
 			{
 				name: 'pd',
 				title: 'Professional Development',
-				descr: '',
+				descr: 'Learn how to use your new mobile toolkits effectively with exciting and interactive professional development for teachers, students, and administrators. Content comes from the innovative minds at iSchool Initiative; a not-for-profit organization.',
 				img: 'img/services/professional-development-off.png',
 				imgAdded: 
 					 'img/services/professional-development-on.png',
@@ -722,21 +722,21 @@ var AppView = Backbone.View.extend({
 			{
 				name: 'tech',
 				title: 'Tech Support',
-				descr: '',
+				descr: 'Resolve technical issues immediately without long holds with tech support. isi simplify provides live, on the spot, education specific support for students and teachers.',
 				img: 'img/services/tech-support-off.png',
 				imgAdded: 'img/services/tech-support-on.png',
 			},
 			{
 				name: 'management',
 				title: 'Management',
-				descr: '',
+				descr: 'Mobile device management allows for a higher level of control in regards to content and application distribution, as well as security for multiple device operating systems and is perfect for BYOT. Airwatch has the infrastructure to handle both large and small deployments including the massive iPad initiative at McAllen ISD. They also offer additional solutions designed to fit the education space.',
 				img: 'img/services/device-management-off.png',
 				imgAdded: 'img/services/device-management-on.png',
 			}, 
 			{
 				name: 'assessment',
 				title: 'Online Assessment',
-				descr: '',
+				descr: 'Excelegrade makes K-12 classroom assessments digital by replacing paper-based tests with assessments on tablets, smart phones, and laptops. By accommodating both free response and multiple choice questions while capturing students\' work, they allow teachers and schools to capture more data than ever before.',
 				img: 'img/services/online-assessment-off.png',
 				imgAdded: 'img/services/online-assessment-on.png',
 			}

@@ -7,7 +7,7 @@
 
 body {
 	background-color: #f5f5f4;
-	color: #babec1;
+	color: #969696;
 	padding-left: 0px;
 	padding-right: 0px;
 	padding: 0px;
@@ -41,7 +41,7 @@ body {
 	overflow: hidden;
 	text-align: center;
 	background-color: #f5f5f4;
-	color: #babec1;
+	color: #969696;
 }
 
 .icons {
@@ -111,4 +111,8 @@ input[type=text] {
 
 .modal-buttons-right {
 	float: right;
+}
+
+label {
+	color: #969696;
 }

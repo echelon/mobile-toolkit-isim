@@ -12,8 +12,7 @@ var ItemView = Backbone.View.extend({
 	className: 'thingyView',
 
 	events: {
-		'click img': 'launchModal',
-		'click button': 'toggleCart',
+		'click img': 'toggleCart',
 	},
 
 	// XXX: model must be set
@@ -22,33 +21,23 @@ var ItemView = Backbone.View.extend({
 		this.$el.html('<div class="thingy">' +
 				'<img src="' + 
 					this.model.get('img') + 
-				'">' +
-				'<div class="btns">'+ 
-					'<button class="btn btn-primary addCart ">' +
-					'Add ' +
-					this.model.get('title') +
-					'</button>' +
-				'</div></div>');
+				'"></div>');
 
 		this.model.on('change:added', this.render, this);
 	},
 
 	render: function() {
 		var src = null,
-			btn = null,
-			text = '';
+			btn = null;
 
 		if(this.model.get('added')) {
 			src = this.model.get('imgAdded');
-			text = 'Remove ' + this.model.get('title');
 		}
 		else {
 			src = this.model.get('img');
-			text = 'Add ' + this.model.get('title');
 		}
 
 		this.$el.find('img').attr('src', src);
-		this.$el.find('button').html(text);
 
 		// FIXME -- why do I have to do this!?
 		this.delegateEvents();
@@ -446,12 +435,20 @@ var FormTwoStepView = FormStepView.extend({
 			window.form.set('name', $(this).val());
 			window.form.set('stage2', true);
 		});
+		this.$el.find('#position').change(function() {
+			window.form.set('position', $(this).val());
+			window.form.set('stage2', true);
+		});
 		this.$el.find('#phone').change(function() {
 			window.form.set('phone', $(this).val());
 			window.form.set('stage2', true);
 		});
 		this.$el.find('#numKits').change(function() {
 			window.form.set('numKits', $(this).val());
+			window.form.set('stage2', true);
+		});
+		this.$el.find('#when').change(function() {
+			window.form.set('when', $(this).val());
 			window.form.set('stage2', true);
 		});
 	},
@@ -710,7 +707,7 @@ var AppView = Backbone.View.extend({
 			}
 		]);
 
-		makeStep('Choose your services.', [
+		makeStep('Choose your solution.', [
 			{
 				name: 'pd',
 				title: 'Professional Development',

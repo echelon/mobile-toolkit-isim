@@ -164,18 +164,22 @@ var Form = Backbone.Model.extend({
 	email: '',		// Form Stage #1 ...
 	items: '',		// 
 	name: '',		// Form Stage #2 ...
+	position: '',	//
 	school: '',		//
 	phone: '',		//
 	numKits: 0,		//
+	when: '',		//
 	stage2: false,	// Switch for stages
 
 	defaults: {
 		email: '',
 		items: '',
 		name: '',
+		position: '',
 		school: '',
 		phone: '',
 		numKits: 0,
+		when: '',
 		stage2: false,
 	},
 
@@ -198,9 +202,11 @@ var Form = Backbone.Model.extend({
 				'entry.5.single': this.get('items'),
 				'entry.7.single': s2,
 				'entry.1.single': this.get('name'),
+				'entry.8.single': this.get('position'),
 				'entry.2.single': this.get('school'),
 				'entry.3.single': this.get('phone'),
 				'entry.4.single': this.get('numKits'),
+				'entry.9.single': this.get('when'),
 
 				// Form junk Google expects
 				pageNumber: 0,	

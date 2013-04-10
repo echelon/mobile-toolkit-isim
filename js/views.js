@@ -3,187 +3,9 @@
 // Copyright (c) 2013 Brandon Thomas 
 
 
-/******************* THINGY VIEW *****************/
-
-var ItemView = Backbone.View.extend({
-	model: null,
-
-	tagName: 'div',
-	className: 'thingyView',
-
-	events: {
-		'click img': 'toggleCart',
-	},
-
-	// XXX: model must be set
-	initialize: function() {
-		// Static render.
-		this.$el.html('<div class="thingy">' +
-				'<img src="' + 
-					this.model.get('img') + 
-				'"></div>');
-
-		this.model.on('change:added', this.render, this);
-	},
-
-	render: function() {
-		var src = null,
-			btn = null;
-
-		if(this.model.get('added')) {
-			src = this.model.get('imgAdded');
-		}
-		else {
-			src = this.model.get('img');
-		}
-
-		this.$el.find('img').attr('src', src);
-
-		// FIXME -- why do I have to do this!?
-		this.delegateEvents();
-	},
-
-	toggleCart: function() {
-		this.model.set('added', !this.model.get('added'));
-	},
-
-	launchModal: function() {
-		this.model.modalView.show();
-	},
-
-	show: function() {
-		// XXX: show()/hide() mess up re-rendering in this case.
-		this.$el.css('display', 'inline-block');
-	},
-
-	hide: function() {
-		// XXX: show()/hide() mess up re-rendering in this case.
-		this.$el.css('display', 'none');
-	},
-});
-
-
-/******************* MODAL VIEW *****************/
-
-
-
-var ModalView = Backbone.View.extend({
-	model: null,
-
-	tagName: 'div',
-	className: 'modalView avgrund-popup',
-
-	events: {
-		'click .addCart': 'addCart',
-		'click .removeCart': 'removeCart',
-		'click .closeCart': 'hide',
-	},
-
-	initialize: function() {
-		// Static rendering
-		$('body').prepend(this.$el);
-		this.$el.attr('id', 'modal-'+this.model.cid)
-			.html(
-				'<h2>' +
-					this.model.get('title')+
-				'</h2>' +
-				'<p>' +
-					this.model.get('description') +
-				'</p>' +
-				'<div class="modal-buttons row-fluid"></div>'
-			);
-
-	},
-
-	render: function() {
-		var btn = '<div class="modal-buttons-left">';
-		if(this.model.get('added')) {
-			btn += '<button class="btn btn-primary ' +
-					'removeCart">Remove</button>';
-		}
-		else {
-			btn += '<button class="btn btn-primary ' +
-					'addCart">Add</button>';
-		}
-		this.$el.find('.modal-buttons').html(
-				btn + 
-				'</div>' +
-				'<div class="modal-buttons-right">' +
-					'<button class="btn btn-primary ' +
-						'closeCart">Close</button>' +
-				'</div>' +
-            	'<div class="clearfix"></div>'
-			);
-	},
-
-	show: function() {
-		this.render();
-		this.$el.show();
-		Avgrund.show('#modal-'+this.model.cid);
-	},
-
-	addCart: function() {
-		this.model.set('added', true);
-		this.hide();
-	},
-
-	removeCart: function() {
-		this.model.set('added', false);
-		this.hide();
-	},
-
-	hide: function() {
-		this.$el.hide();
-		Avgrund.hide();
-	},
-});
-
-var ThanksView = Backbone.View.extend({
-	model: null,
-
-	tagName: 'div',
-	className: 'thanksView avgrund-popup',
-
-	initialize: function() {
-		// Static rendering
-		$('body').prepend(this.$el);
-		this.$el.attr('id', 'thanks-'+this.cid)
-			.html(
-				'<h2>Thanks for your info!</h2>'
-			);
-	},
-
-	render: function() {
-	},
-
-	restart: function() {
-		if(window.app.isAnimating && this.tries > 0) {
-			this.tries--;
-			setTimeout(this.restart, 250);
-			return;
-		}
-
-		this.hide(); 
-		window.app.restart();
-	},
-
-	show: function() {
-		var that = this;
-		this.render();
-		this.$el.show();
-		Avgrund.show('#thanks-'+this.cid);
-		setTimeout(function() { 
-			that.restart();
-		}, 1800);
-	},
-
-	hide: function() {
-		this.$el.hide();
-		Avgrund.hide();
-	},
-});
-
-/******************* STEP VIEW *********************/
+/* ======================================================== *\
+ *						STEP SCRIPTING						*
+ * ======================================================== */
 
 var StepView = Backbone.View.extend({
 	model: null,
@@ -218,10 +40,36 @@ var StepView = Backbone.View.extend({
 	// Must wait to add items to DOM for when the list 
 	// is first added to the model.
 	renderItems: function() {
-		var that = this;
+		var that = this,
+			nItems = 0,
+			nRows = 0,
+			nPerRow = 0,
+			$rowDiv = null,
+			$icons = null;
+
+		console.log('stepView.renderItems()');
+		console.log('dimensions', 
+				this.$el.width(), this.$el.height());
 		this.$el.find('.icons').html();
-		_.each(this.model.get('items'), function(x) {
-			that.$el.find('.icons').append(x.view.$el);
+
+		nItems = this.model.get('items').length;
+		nRows = Math.floor(Math.sqrt(nItems));
+		nPerRow = Math.ceil(nItems/nRows);
+
+		$icons = this.$el.find('.icons');
+
+		_.each(this.model.get('items'), function(x, i, li) {
+			if(i % nPerRow == 0) {
+				$rowDiv = $(
+					'<div class="row-fluid">' + 
+						'<div class="span12">' +
+						'</div>' +
+					'</div>'
+				);
+				$icons.append($rowDiv);
+				$rowDiv = $rowDiv.find('.span12');
+			}
+			$rowDiv.append(x.view.$el);
 			x.view.render();
 		});
 	},
@@ -243,6 +91,10 @@ var StepView = Backbone.View.extend({
 	},
 });
 
+
+/* ======================================================== *\
+ *					FORM STEP SCRIPTING						*
+ * ======================================================== */
 
 var FormStepView = StepView.extend({
 	model: null,
@@ -488,9 +340,219 @@ var FormTwoStepView = FormStepView.extend({
 });
 
 
+/* ======================================================== *\
+ *						ITEMS IN STEPS 						*
+ * ======================================================== */
 
-/* ************************************************** */
+// TODO: Rename thingyView
+// TODO: Create ItemStepView to script Items
 
+var ItemView = Backbone.View.extend({
+	model: null,
+
+	tagName: 'div',
+	className: 'thingyView',
+
+	placeholder: 'http://placehold.it/80x80',
+
+	placeholder1: 'http://placehold.it/80x80/dd00dd/ffffff',
+	placeholder2: 'http://placehold.it/125x125/dd00dd/ffffff',
+	placeholder3: 'http://placehold.it/175x175/dd00dd/ffffff',
+	placeholder4: 'http://placehold.it/200x200/dd00dd/ffffff',
+	placeholder5: 'http://placehold.it/250x250/dd00dd/ffffff',
+
+	events: {
+		'click ': 'toggleCart',
+	},
+
+	// XXX: model must be set
+	initialize: function() {
+		// Static render.
+		this.$el.html('<div class="thingy icon">' +
+			'<div class="iconInner"	style="background-image: url(\'/img/logos/ischool.png\')"></div>' +
+				/*'<img src="' + 
+					this.placeholder1 + '" class="size1">' +
+				'<img src="' + 
+					this.placeholder2 + '" class="size2">' +
+				'<img src="' + 
+					this.placeholder3 + '" class="size3">' +
+				'<img src="' + 
+					this.placeholder4 + '" class="size4">' +
+				'<img src="' + 
+					this.placeholder5 + '" class="size5">' +*/
+				
+				'</div>');
+
+		this.model.on('change:added', this.render, this);
+	},
+
+	render: function() {
+		var src = null,
+			btn = null;
+
+		// TODO: COMMENTED OUT
+		if(this.model.get('added')) {
+			src = this.model.get('imgAdded');
+			this.$el.addClass('added');
+		}
+		else {
+			src = this.model.get('img');
+			this.$el.removeClass('added');
+		}
+
+		/*src = this.placeholder; // TODO
+
+		this.$el.find('img').attr('src', src);*/
+
+		// FIXME -- why do I have to do this!?
+		this.delegateEvents();
+	},
+
+	toggleCart: function() {
+		this.model.set('added', !this.model.get('added'));
+	},
+
+	launchModal: function() {
+		this.model.modalView.show();
+	},
+
+	show: function() {
+		// XXX: show()/hide() mess up re-rendering in this case.
+		this.$el.css('display', 'inline-block');
+	},
+
+	hide: function() {
+		// XXX: show()/hide() mess up re-rendering in this case.
+		this.$el.css('display', 'none');
+	},
+});
+
+
+/* ======================================================== *\
+ *					MODAL POPUP SCRIPTING					*
+ * ======================================================== */
+
+var ModalView = Backbone.View.extend({
+	model: null,
+
+	tagName: 'div',
+	className: 'modalView avgrund-popup',
+
+	events: {
+		'click .addCart': 'addCart',
+		'click .removeCart': 'removeCart',
+		'click .closeCart': 'hide',
+	},
+
+	initialize: function() {
+		// Static rendering
+		$('body').prepend(this.$el);
+		this.$el.attr('id', 'modal-'+this.model.cid)
+			.html(
+				'<h2>' +
+					this.model.get('title')+
+				'</h2>' +
+				'<p>' +
+					this.model.get('description') +
+				'</p>' +
+				'<div class="modal-buttons row-fluid"></div>'
+			);
+
+	},
+
+	render: function() {
+		var btn = '<div class="modal-buttons-left">';
+		if(this.model.get('added')) {
+			btn += '<button class="btn btn-primary ' +
+					'removeCart">Remove</button>';
+		}
+		else {
+			btn += '<button class="btn btn-primary ' +
+					'addCart">Add</button>';
+		}
+		this.$el.find('.modal-buttons').html(
+				btn + 
+				'</div>' +
+				'<div class="modal-buttons-right">' +
+					'<button class="btn btn-primary ' +
+						'closeCart">Close</button>' +
+				'</div>' +
+            	'<div class="clearfix"></div>'
+			);
+	},
+
+	show: function() {
+		this.render();
+		this.$el.show();
+		Avgrund.show('#modal-'+this.model.cid);
+	},
+
+	addCart: function() {
+		this.model.set('added', true);
+		this.hide();
+	},
+
+	removeCart: function() {
+		this.model.set('added', false);
+		this.hide();
+	},
+
+	hide: function() {
+		this.$el.hide();
+		Avgrund.hide();
+	},
+});
+
+// TODO: Convert to ModalView subclass
+var ThanksView = Backbone.View.extend({
+	model: null,
+
+	tagName: 'div',
+	className: 'thanksView avgrund-popup',
+
+	initialize: function() {
+		// Static rendering
+		$('body').prepend(this.$el);
+		this.$el.attr('id', 'thanks-'+this.cid)
+			.html(
+				'<h2>Thanks for your info!</h2>'
+			);
+	},
+
+	render: function() {
+	},
+
+	restart: function() {
+		if(window.app.isAnimating && this.tries > 0) {
+			this.tries--;
+			setTimeout(this.restart, 250);
+			return;
+		}
+
+		this.hide(); 
+		window.app.restart();
+	},
+
+	show: function() {
+		var that = this;
+		this.render();
+		this.$el.show();
+		Avgrund.show('#thanks-'+this.cid);
+		setTimeout(function() { 
+			that.restart();
+		}, 1800);
+	},
+
+	hide: function() {
+		this.$el.hide();
+		Avgrund.hide();
+	},
+});
+
+
+/* ======================================================== *\
+ *					BUTTON ELEMENT SCRIPTING				*
+ * ======================================================== */
 
 var NavButton = Backbone.View.extend({
 	// State:
@@ -566,6 +628,11 @@ var NavButton = Backbone.View.extend({
 	}
 });
 
+
+/* ======================================================== *\
+ *					MAIN APP SCRIPTING						*
+ * ======================================================== */
+
 var AppView = Backbone.View.extend({
 
 	// Animation used to switch stages.
@@ -595,7 +662,6 @@ var AppView = Backbone.View.extend({
 		var steps = new StepList();
 
 		window.itemList = itemlist; // TODO: Higher visibility
-
 		window.form = new Form(); // TODO: Higher visibility
 
 		this.backButton = new NavButton({
@@ -617,7 +683,8 @@ var AppView = Backbone.View.extend({
 			imgEnabled: 'img/restart.png',
 			callback: function() { that.restart(); },
 		});
-		
+	
+		// FIXME: This is horrible code.
 		var makeStep = function(title, items) {
 			var step = new ItemStep({
 				title: title,
@@ -645,12 +712,13 @@ var AppView = Backbone.View.extend({
 				var tv = new ItemView({
 					model: t,
 				});
-				var mv = new ModalView({
-					model: t,
-				});
+				// XXX: No modal views.
+				//var mv = new ModalView({
+				//		model: t,
+				//});
 
 				t.view = tv;
-				t.modalView = mv;
+				//t.modalView = mv; // XXX: No modal views
 			
 				itemlist.push(t);
 				ths.push(t);
@@ -658,6 +726,67 @@ var AppView = Backbone.View.extend({
 			step.set('items', ths);
 			return step;
 		}
+
+		makeStep('Test 1', [
+			{ name: 'test 1' }, 
+		]);
+
+		makeStep('Test 2', [
+			{ name: 'test 1' }, 
+			{ name: 'test 2' }, 
+		]);
+
+		makeStep('Test 3', [
+			{ name: 'test 1' }, 
+			{ name: 'test 2' }, 
+			{ name: 'test 3' }, 
+		]);
+
+		makeStep('Test 4', [
+			{ name: 'test 1' }, 
+			{ name: 'test 2' }, 
+			{ name: 'test 3' }, 
+			{ name: 'test 4' }, 
+		]);
+
+		makeStep('Test 5', [
+			{ name: 'test 1' }, 
+			{ name: 'test 2' }, 
+			{ name: 'test 3' }, 
+			{ name: 'test 4' }, 
+			{ name: 'test 5' }, 
+		]);
+
+		makeStep('Test 6', [
+			{ name: 'test 1' }, 
+			{ name: 'test 2' }, 
+			{ name: 'test 3' }, 
+			{ name: 'test 4' }, 
+			{ name: 'test 5' }, 
+			{ name: 'test 6' }, 
+		]);
+
+		makeStep('Test 7', [
+			{ name: 'test 1' }, 
+			{ name: 'test 2' }, 
+			{ name: 'test 3' }, 
+			{ name: 'test 4' }, 
+			{ name: 'test 5' }, 
+			{ name: 'test 6' }, 
+			{ name: 'test 7' }, 
+		]);
+
+		makeStep('Test 8', [
+			{ name: 'test 1' }, 
+			{ name: 'test 2' }, 
+			{ name: 'test 3' }, 
+			{ name: 'test 4' }, 
+			{ name: 'test 5' }, 
+			{ name: 'test 6' }, 
+			{ name: 'test 7' }, 
+			{ name: 'test 8' }, 
+		]);
+
 
 		makeStep('Select your platform.', [
 			{
@@ -691,20 +820,6 @@ var AppView = Backbone.View.extend({
 				img: 'img/accessory/cases-off.png',
 				imgAdded: 'img/accessory/cases-on.png',
 			}, 
-			{
-				name: 'cloth',
-				title: 'Microfiber Cloth',
-				descr: 'Nobody likes a smudgy screen. Keep it clean while at the same time supporting iSchool Initiative and the movement for mobile learning.',
-				img: 'img/accessory/mf-cloth-off.png',
-				imgAdded: 'img/accessory/mf-cloth-on.png',
-			},
-			{
-				name: 'stylus',
-				title: 'Styluses',
-				descr: 'Using a stylus helps students in many areas including note taking, art, math and content creation. Make every detail perfect.',
-				img: 'img/accessory/stylus-off.png',
-				imgAdded: 'img/accessory/stylus-on.png',
-			}
 		]);
 
 		makeStep('Choose your solution.', [
@@ -782,6 +897,28 @@ var AppView = Backbone.View.extend({
 		// EVENTS EVENTS !!
 		// EVENTS EVENTS EVENTS !!!
 		// EVENTS EVENTS EVENTS EVENTS !!!!
+		// EVENTS EVENTS EVENTS !!!
+		// EVENTS EVENTS !!
+		// EVENTS !
+
+		// Development *ONLY*
+		console.log($(document).getUrlParam('dev'));
+		if($(document).getUrlParam('dev')) {
+			console.log('dev mode enabled');
+			$(document).on('keydown', function(ev) {
+				if($('input').is(':focus')) {
+					return true;
+				}
+				switch(ev.which) {
+					case 37:
+						that.prev();
+						return false;
+					case 39:
+						that.next();
+						return false;
+				}
+			});
+		}
 
 		// Hashchange events that haven't been handled will 
 		// redirect us to the appropriate stage.
@@ -805,6 +942,11 @@ var AppView = Backbone.View.extend({
 			}
 			that.isAnimating = true;
 			that.steps.goto(num);
+		});
+
+		$(window).on('resize', function() {
+			console.log('resize event');
+			// TODO: NECESSARY!? USE MEDIA QUERIES!!
 		});
 
 		this.steps.on('steps:change', function() { 

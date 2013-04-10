@@ -1,0 +1,116 @@
+@tiny: ~"all and (min-width: 200px)"; 	// 80x80 icons
+@small: ~"all and (min-width: 580px)";	// 125x125 icons
+@medium: ~"all and (min-width: 820px)";	// 175x175 icons
+@large: ~"all and (min-width: 1000px)"; // 200x200 icons
+@huge: ~"all and (min-width: 1200px)";	// 250x250 icons
+
+.border-radius(@rad) {
+	border-radius: @rad;
+	-moz-border-radius: @rad;
+	-webkit-border-radius: @rad;
+}
+
+.hueRotate {
+	-webkit-filter: hue-rotate(50deg); 
+}
+
+.set_tiny {
+	width: 80px;
+	height: 80px;
+}
+
+.set_small {
+	width: 125px;
+	height: 125px;
+}
+
+.set_medium {
+	width: 175px;
+	height: 175px;
+}
+
+.set_large {
+	width: 200px;
+	height: 200px;
+}
+
+.set_huge {
+	width: 250px;
+	height: 250px;
+}
+
+// TODO: RENAME!
+.icons {
+
+	.size1 { display: block; }
+	.size2 { display: none; }
+	.size3 { display: none; }
+	.size4 { display: none; }
+	.size5 { display: none; }
+
+	.icon {
+		.border-radius(18px);
+		overflow: hidden;
+		border: 1px solid #ccc;
+	}
+
+	.added .icon {
+		border: 1px solid #0085cc;
+	}
+
+	.iconInner {
+		background-repeat: no-repeat;
+		background-size: contain;
+	}
+
+	.added .iconInner {
+		.hueRotate;
+ 		-webkit-filter: grayscale(50%) brightness(97%);  
+	}
+
+	@media @tiny {
+		.iconInner { .set_tiny; }
+		.size1 { display: block; }
+		.size2 { display: none; }
+		.size3 { display: none; }
+		.size4 { display: none; }
+		.size5 { display: none; }
+	}
+
+	@media @small {
+		.iconInner { .set_small; }
+		.size1 { display: none; }
+		.size2 { display: block; }
+		.size3 { display: none; }
+		.size4 { display: none; }
+		.size5 { display: none; }
+	}
+
+	@media @medium {
+		.iconInner { .set_medium; }
+		.size1 { display: none; }
+		.size2 { display: none; }
+		.size3 { display: block; }
+		.size4 { display: none; }
+		.size5 { display: none; }
+	}
+
+	@media @large {
+		.iconInner { .set_large; }
+		.size1 { display: none; }
+		.size2 { display: none; }
+		.size3 { display: none; }
+		.size4 { display: block; }
+		.size5 { display: none; }
+	}
+
+	@media @huge {
+		.iconInner { .set_huge; }
+		.size1 { display: none; }
+		.size2 { display: none; }
+		.size3 { display: none; }
+		.size4 { display: none; }
+		.size5 { display: block; }
+	}
+}
+

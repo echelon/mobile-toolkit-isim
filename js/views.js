@@ -368,8 +368,13 @@ var ItemView = Backbone.View.extend({
 	// XXX: model must be set
 	initialize: function() {
 		// Static render.
+		// TODO: Remove 'thingy' class
 		this.$el.html('<div class="thingy icon">' +
-			'<div class="iconInner"	style="background-image: url(\'/img/logos/ischool.png\')"></div>' +
+			'<div class="iconContainer">' +
+			'<div class="iconInner"	style="background-image: ' +
+				'url(\'/img/logos/ischool.png\')"></div>' +
+			'</div>' +
+			'<p>Icon Text</p>' +
 				/*'<img src="' + 
 					this.placeholder1 + '" class="size1">' +
 				'<img src="' + 
@@ -383,20 +388,21 @@ var ItemView = Backbone.View.extend({
 				
 				'</div>');
 
+		this.$el.find('p').text(this.model.get('title'));
+		this.$el.find('.iconInner').css({
+			'background-image': 'url('+this.model.get('img')+')'
+		});
 		this.model.on('change:added', this.render, this);
 	},
 
 	render: function() {
-		var src = null,
-			btn = null;
+		var btn = null;
 
 		// TODO: COMMENTED OUT
 		if(this.model.get('added')) {
-			src = this.model.get('imgAdded');
 			this.$el.addClass('added');
 		}
 		else {
-			src = this.model.get('img');
 			this.$el.removeClass('added');
 		}
 
@@ -707,7 +713,6 @@ var AppView = Backbone.View.extend({
 					title: it.title,
 					description: it.descr,
 					img: it.img,
-					imgAdded: it.imgAdded,
 				});
 				var tv = new ItemView({
 					model: t,
@@ -727,98 +732,24 @@ var AppView = Backbone.View.extend({
 			return step;
 		}
 
-		makeStep('Test 1', [
-			{ name: 'test 1' }, 
-		]);
-
-		makeStep('Test 2', [
-			{ name: 'test 1' }, 
-			{ name: 'test 2' }, 
-		]);
-
-		makeStep('Test 3', [
-			{ name: 'test 1' }, 
-			{ name: 'test 2' }, 
-			{ name: 'test 3' }, 
-		]);
-
-		makeStep('Test 4', [
-			{ name: 'test 1' }, 
-			{ name: 'test 2' }, 
-			{ name: 'test 3' }, 
-			{ name: 'test 4' }, 
-		]);
-
-		makeStep('Test 5', [
-			{ name: 'test 1' }, 
-			{ name: 'test 2' }, 
-			{ name: 'test 3' }, 
-			{ name: 'test 4' }, 
-			{ name: 'test 5' }, 
-		]);
-
-		makeStep('Test 6', [
-			{ name: 'test 1' }, 
-			{ name: 'test 2' }, 
-			{ name: 'test 3' }, 
-			{ name: 'test 4' }, 
-			{ name: 'test 5' }, 
-			{ name: 'test 6' }, 
-		]);
-
-		makeStep('Test 7', [
-			{ name: 'test 1' }, 
-			{ name: 'test 2' }, 
-			{ name: 'test 3' }, 
-			{ name: 'test 4' }, 
-			{ name: 'test 5' }, 
-			{ name: 'test 6' }, 
-			{ name: 'test 7' }, 
-		]);
-
-		makeStep('Test 8', [
-			{ name: 'test 1' }, 
-			{ name: 'test 2' }, 
-			{ name: 'test 3' }, 
-			{ name: 'test 4' }, 
-			{ name: 'test 5' }, 
-			{ name: 'test 6' }, 
-			{ name: 'test 7' }, 
-			{ name: 'test 8' }, 
-		]);
-
-
 		makeStep('Select your platform.', [
 			{
 				name: 'ios',
 				title: 'iOS',
 				descr: 'iOS is the foundation of iPad, and iPod touch devices and fits perfectly in the education space. Unsurpassed content creation ability, mixed with simplicity and stability, make iOS devices a common choice for mobile learning.',
-				img: 'img/items/apple-off.png',
-				imgAdded: 'img/items/apple-on.png',
+				img: 'img/logos/apple.png',
 			}, 
 			{
 				name: 'android',
 				title: 'Android',
 				descr: 'A customizable, open source OS that is run on a variety of education ready devices such as Galaxy Tab series, and the Nexus series. Android OS allows for versatile and economical choices to fit any classroom.',
-				img: 'img/items/android-off.png',
-				imgAdded: 'img/items/android-on.png',
+				img: 'img/logos/android.png',
 			}, 
 			{
 				name: 'windows',
 				title: 'Windows',
 				descr: 'Windows 8 OS is comfortable and sleek and works on Microsoft Surface tablet. Microsoft office and USB input make PC to tablet conversions seamless.',
-				img: 'img/items/windows-off.png',
-				imgAdded: 'img/items/windows-on.png',
-			}, 
-		]);
-
-		makeStep('Choose your accessories.', [
-			{
-				name: 'cases',
-				title: 'Cases',
-				descr: 'The current leader in protective casing, Otter Box\'s quality products are designed to fit almost any mobile device. They are your first, best and cheapest insurance policy.',
-				img: 'img/accessory/cases-off.png',
-				imgAdded: 'img/accessory/cases-on.png',
+				img: 'img/logos/windows.png',
 			}, 
 		]);
 
@@ -827,31 +758,47 @@ var AppView = Backbone.View.extend({
 				name: 'pd',
 				title: 'Professional Development',
 				descr: 'Learn how to use your new mobile toolkits effectively with exciting and interactive professional development for teachers, students, and administrators. Content comes from the innovative minds at iSchool Initiative; a not-for-profit organization.',
-				img: 'img/services/professional-development-off.png',
-				imgAdded: 
-					 'img/services/professional-development-on.png',
+				img: 'img/logos/ischool.png',
 			},
 			{
 				name: 'tech',
 				title: 'Tech Support',
 				descr: 'Resolve technical issues immediately without long holds with tech support. isi simplify provides live, on the spot, education specific support for students and teachers.',
-				img: 'img/services/tech-support-off.png',
-				imgAdded: 'img/services/tech-support-on.png',
+				img: 'img/logos/isis.png',
 			},
 			{
 				name: 'management',
-				title: 'Management',
+				title: 'Device Management',
 				descr: 'Mobile device management allows for a higher level of control in regards to content and application distribution, as well as security for multiple device operating systems and is perfect for BYOT. Airwatch has the infrastructure to handle both large and small deployments including the massive iPad initiative at McAllen ISD. They also offer additional solutions designed to fit the education space.',
-				img: 'img/services/device-management-off.png',
-				imgAdded: 'img/services/device-management-on.png',
+				img: 'img/logos/airwatch.png',
 			}, 
 			{
 				name: 'assessment',
 				title: 'Online Assessment',
 				descr: 'Excelegrade makes K-12 classroom assessments digital by replacing paper-based tests with assessments on tablets, smart phones, and laptops. By accommodating both free response and multiple choice questions while capturing students\' work, they allow teachers and schools to capture more data than ever before.',
-				img: 'img/services/online-assessment-off.png',
-				imgAdded: 'img/services/online-assessment-on.png',
-			}
+				img: 'img/logos/excelegrade.png',
+			},
+			{
+				name: 'cases',
+				title: 'Cases',
+				descr: 'The current leader in protective casing, Otter Box\'s quality products are designed to fit almost any mobile device. They are your first, best and cheapest insurance policy.',
+				img: 'img/logos/otterbox.png',
+			}, 
+			{
+				name: 'social',
+				title: 'Social Learning Platform',
+				img: 'img/logos/edmodo.png',
+			}, 
+			{
+				name: 'texting',
+				title: 'Student-Teacher Texting',
+				img: 'img/logos/remind101.png',
+			}, 
+			{
+				name: 'resources',
+				title: 'STEM Materials',
+				img: 'img/logos/definedstem.png',
+			}, 
 
 		]);
 

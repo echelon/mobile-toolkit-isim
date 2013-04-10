@@ -10,107 +10,131 @@
 	-webkit-border-radius: @rad;
 }
 
-.hueRotate {
-	-webkit-filter: hue-rotate(50deg); 
+.noselect {
+	-moz-user-select: none;
+	-webkit-user-select: none;
 }
 
+.set_tiny_w { width: 80px; }
 .set_tiny {
 	width: 80px;
 	height: 80px;
 }
 
+.set_small_w { width: 125px; }
 .set_small {
 	width: 125px;
 	height: 125px;
 }
 
+.set_medium_w { width: 175px; }
 .set_medium {
 	width: 175px;
 	height: 175px;
 }
 
+.set_large_w { width: 200px; }
 .set_large {
 	width: 200px;
 	height: 200px;
 }
 
+.set_huge_w { width: 250px; }
 .set_huge {
 	width: 250px;
 	height: 250px;
 }
 
+body {
+	background-color: darken(#f5f5f4, 2%);
+}
+
+#AppView {
+	background-color: darken(#f5f5f4, 2%);
+}
+
+#application-nav {
+	background-color: darken(#e2e2df, 10%);
+}
+
+
 // TODO: RENAME!
 .icons {
+	.span12 {
+		vertical-align: top;
+	}
 
-	.size1 { display: block; }
-	.size2 { display: none; }
-	.size3 { display: none; }
-	.size4 { display: none; }
-	.size5 { display: none; }
+	.thingyView { // TODO: Migrate class, simplify DOM
+		display: inline-block;
+		vertical-align: top;
+		padding: 5px;
+	}
 
 	.icon {
-		.border-radius(18px);
 		overflow: hidden;
-		border: 1px solid #ccc;
+		cursor: pointer;
+		.noselect;
+		p {
+			font-family: 'droid sans';
+			color: #666;
+		}
 	}
 
 	.added .icon {
-		border: 1px solid #0085cc;
+		p {
+			color: #F05A28;
+			text-shadow: 0px 1px 5px #999;
+		}
+	}
+
+	.iconContainer {
+		.border-radius(18px);
+		border: 2px solid #ccc;
+		overflow: hidden;
+	}
+
+	.added .iconContainer {
+		border: 2px solid #F05A28;
+		background-color: #0085cc;
 	}
 
 	.iconInner {
+		background-color: #fff;
 		background-repeat: no-repeat;
 		background-size: contain;
+		background-position: center;
 	}
 
 	.added .iconInner {
-		.hueRotate;
- 		-webkit-filter: grayscale(50%) brightness(97%);  
+ 		-webkit-filter: grayscale(0.7) 
+						brightness(0.95)
+						opacity(0.80);
+		visibility: inherit;
 	}
 
 	@media @tiny {
+		.icon { .set_tiny_w; }
 		.iconInner { .set_tiny; }
-		.size1 { display: block; }
-		.size2 { display: none; }
-		.size3 { display: none; }
-		.size4 { display: none; }
-		.size5 { display: none; }
 	}
 
 	@media @small {
+		.icon { .set_small_w; }
 		.iconInner { .set_small; }
-		.size1 { display: none; }
-		.size2 { display: block; }
-		.size3 { display: none; }
-		.size4 { display: none; }
-		.size5 { display: none; }
 	}
 
 	@media @medium {
+		.icon { .set_medium_w; }
 		.iconInner { .set_medium; }
-		.size1 { display: none; }
-		.size2 { display: none; }
-		.size3 { display: block; }
-		.size4 { display: none; }
-		.size5 { display: none; }
 	}
 
 	@media @large {
+		.icon { .set_large_w; }
 		.iconInner { .set_large; }
-		.size1 { display: none; }
-		.size2 { display: none; }
-		.size3 { display: none; }
-		.size4 { display: block; }
-		.size5 { display: none; }
 	}
 
 	@media @huge {
+		.icon { .set_huge_w; }
 		.iconInner { .set_huge; }
-		.size1 { display: none; }
-		.size2 { display: none; }
-		.size3 { display: none; }
-		.size4 { display: none; }
-		.size5 { display: block; }
 	}
 }
 

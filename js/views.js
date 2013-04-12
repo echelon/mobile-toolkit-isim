@@ -119,34 +119,37 @@ var FormStepView = StepView.extend({
 var RadioYesNo = Backbone.View.extend({
 	id: 'radio-yesno',
 	events: {
-		'click button': 'onClick',
+		'click button[value=yes]': 'clickYes',
+		'click button[value=no]': 'clickNo',
 	},
 	initialize: function() {
 		this.$el = $('#radio-yesno').detach();
 	},
 
-	onClick: function(ev) {
-		var val = ev.srcElement.value;
-		console.log(ev.srcElement.value); // TODO TODO NOT GOOD 
-		console.log(ev);
-
-		// TODO: color red or green
-		switch(val) {
-			case 'yes':
-				this.$el.find('button[value=yes]').addClass('btn-success');
-				this.$el.find('button[value=yes]').removeClass('btn-inverse');
-				this.$el.find('button[value=no]').addClass('btn-inverse');
-				this.$el.find('button[value=no]').removeClass('btn-danger');
-				break;
-			case 'no':
-				this.$el.find('button[value=yes]').removeClass('btn-success');
-				this.$el.find('button[value=yes]').addClass('btn-inverse');
-				this.$el.find('button[value=no]').removeClass('btn-inverse');
-				this.$el.find('button[value=no]').addClass('btn-danger');
-				break;
-		}
+	clickYes: function(ev) {
+		this.$el.find('button[value=yes]').addClass('btn-success');
+		this.$el.find('button[value=yes]').removeClass('btn-inverse');
+		this.$el.find('button[value=no]').addClass('btn-inverse');
+		this.$el.find('button[value=no]').removeClass('btn-danger');
+		window.form.set('stage2', true);
 	},
 
+	clickNo: function(ev) {
+		this.$el.find('button[value=yes]').removeClass('btn-success');
+		this.$el.find('button[value=yes]').addClass('btn-inverse');
+		this.$el.find('button[value=no]').removeClass('btn-inverse');
+		this.$el.find('button[value=no]').addClass('btn-danger');
+		window.form.set('stage2', false);
+	},
+
+	reset: function() {
+		// Note: 'active' is bootstrap.js's managed, depressed state
+		this.$el.find('button[value=yes]').removeClass('active btn-success');
+		this.$el.find('button[value=no]').removeClass('active btn-danger');
+		this.$el.find('button[value=yes]').addClass('btn-inverse');
+		this.$el.find('button[value=no]').addClass('btn-inverse');
+		window.form.set('stage2', false);
+	},
 });
 
 var FormOneStepView = FormStepView.extend({
@@ -174,6 +177,10 @@ var FormOneStepView = FormStepView.extend({
 
 		window.form.on('change:email', function() { 
 			that.syncEmail(); 
+		});
+
+		window.form.on('change:name', function() { 
+			that.syncName(); 
 		});
 
 		window.form.on('clear', function() {
@@ -219,10 +226,8 @@ var FormOneStepView = FormStepView.extend({
 			window.form.set('email', $(this).val());
 		});
 
-		this.$el.find('#enableMore').change(function() {
-			window.form.set('stage2', 
-				Boolean($(this).attr('checked'))
-			);
+		this.$el.find('#name1').change(function() {
+			window.form.set('name', $(this).val());
 		});
 	},
 
@@ -236,11 +241,21 @@ var FormOneStepView = FormStepView.extend({
 		}
 	},
 
+	// If email on one form changes, sync it.
+	syncName: function() {
+		var $name = this.$el.find('#name1'),
+			nm = window.form.get('name');
+		if($name.val() != nm) {
+			$name.val(nm);
+			return false;
+		}
+	},
+
 	resetForm: function() {
 		this.$el.find('input').each(function() {
 			$(this).val('');
 		});
-		this.$el.find('#enableMore').removeAttr('checked');
+		this.radio.reset();
 	},
 
 	submit: function() {
@@ -267,7 +282,7 @@ var FormOneStepView = FormStepView.extend({
 			text = 'Submit <i class="icon-thumbs-up icon-white"></i>';
 		}
 
-		this.$el.find('button #form1_submit').html(text);
+		this.$el.find('#form1_submit').html(text);
 	},
 });
 
@@ -293,6 +308,10 @@ var FormTwoStepView = FormStepView.extend({
 	
 		window.form.on('change:email', function() { 
 			that.syncEmail(); 
+		});
+	
+		window.form.on('change:name', function() { 
+			that.syncName(); 
 		});
 
 		window.form.on('clear', function() {
@@ -323,7 +342,7 @@ var FormTwoStepView = FormStepView.extend({
 			window.form.set('school', $(this).val());
 			window.form.set('stage2', true);
 		});
-		this.$el.find('#name').change(function() {
+		this.$el.find('#name2').change(function() {
 			window.form.set('name', $(this).val());
 			window.form.set('stage2', true);
 		});
@@ -351,6 +370,16 @@ var FormTwoStepView = FormStepView.extend({
 			em = window.form.get('email');
 		if($email.val() != em) {
 			$email.val(em);
+			return false;
+		}
+	},
+
+	// If name on one form changes, sync it.
+	syncName: function() {
+		var $name = this.$el.find('#name2'),
+			nm = window.form.get('name');
+		if($name.val() != nm) {
+			$name.val(nm);
 			return false;
 		}
 	},

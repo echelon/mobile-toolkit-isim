@@ -47,9 +47,6 @@ var StepView = Backbone.View.extend({
 			$rowDiv = null,
 			$icons = null;
 
-		console.log('stepView.renderItems()');
-		console.log('dimensions', 
-				this.$el.width(), this.$el.height());
 		this.$el.find('.icons').html();
 
 		nItems = this.model.get('items').length;
@@ -920,25 +917,6 @@ var AppView = Backbone.View.extend({
 		// EVENTS EVENTS !!
 		// EVENTS !
 
-		// Development *ONLY*
-		console.log($(document).getUrlParam('dev'));
-		if($(document).getUrlParam('dev')) {
-			console.log('dev mode enabled');
-			$(document).on('keydown', function(ev) {
-				if($('input').is(':focus')) {
-					return true;
-				}
-				switch(ev.which) {
-					case 37:
-						that.prev();
-						return false;
-					case 39:
-						that.next();
-						return false;
-				}
-			});
-		}
-
 		// Hashchange events that haven't been handled will 
 		// redirect us to the appropriate stage.
 		// TODO: Make nice with keys instead of numbers.
@@ -961,11 +939,6 @@ var AppView = Backbone.View.extend({
 			}
 			that.isAnimating = true;
 			that.steps.goto(num);
-		});
-
-		$(window).on('resize', function() {
-			console.log('resize event');
-			// TODO: NECESSARY!? USE MEDIA QUERIES!!
 		});
 
 		this.steps.on('steps:change', function() { 

@@ -116,10 +116,43 @@ var FormStepView = StepView.extend({
 	},
 });
 
+var RadioYesNo = Backbone.View.extend({
+	id: 'radio-yesno',
+	events: {
+		'click button': 'onClick',
+	},
+	initialize: function() {
+		this.$el = $('#radio-yesno').detach();
+	},
+
+	onClick: function(ev) {
+		var val = ev.srcElement.value;
+		console.log(ev.srcElement.value); // TODO TODO NOT GOOD 
+		console.log(ev);
+
+		// TODO: color red or green
+		switch(val) {
+			case 'yes':
+				this.$el.find('button[value=yes]').addClass('btn-success');
+				this.$el.find('button[value=yes]').removeClass('btn-inverse');
+				this.$el.find('button[value=no]').addClass('btn-inverse');
+				this.$el.find('button[value=no]').removeClass('btn-danger');
+				break;
+			case 'no':
+				this.$el.find('button[value=yes]').removeClass('btn-success');
+				this.$el.find('button[value=yes]').addClass('btn-inverse');
+				this.$el.find('button[value=no]').removeClass('btn-inverse');
+				this.$el.find('button[value=no]').addClass('btn-danger');
+				break;
+		}
+	},
+
+});
 
 var FormOneStepView = FormStepView.extend({
 	model: null,
 	className: 'stepView formStepView',
+	radio: new RadioYesNo(),
 
 	// XXX: model must be set
 	initialize: function() {
@@ -135,6 +168,9 @@ var FormOneStepView = FormStepView.extend({
 		// Static rendering
 		this.$el.find('.name')
 				.html(this.model.get('title'));
+
+		this.$el.find('.radio-attach')
+				.append(this.radio.$el);
 
 		window.form.on('change:email', function() { 
 			that.syncEmail(); 
@@ -161,6 +197,10 @@ var FormOneStepView = FormStepView.extend({
 		// Actually, may need to reapply to different event too
 		// depending on stage2 state...
 		this.$el.off('submit');
+
+		this.$el.button();
+		this.$el.find('button').on('click', function() {
+		});
 
 		if(window.form.get('stage2')) {
 			this.$el.on('submit', function(ev) { 
@@ -227,7 +267,7 @@ var FormOneStepView = FormStepView.extend({
 			text = 'Submit <i class="icon-thumbs-up icon-white"></i>';
 		}
 
-		this.$el.find('button').html(text);
+		this.$el.find('button #form1_submit').html(text);
 	},
 });
 
@@ -731,6 +771,9 @@ var AppView = Backbone.View.extend({
 			step.set('items', ths);
 			return step;
 		}
+		
+		// icon-ok
+		// icon-remove
 
 		makeStep('Select your platform.', [
 			{

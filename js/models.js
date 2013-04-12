@@ -169,7 +169,11 @@ var Form = Backbone.Model.extend({
 	phone: '',		//
 	numKits: 0,		//
 	when: '',		//
-	stage2: false,	// Switch for stages
+
+	// Model calculated metadata for the view to use
+	necessary_info: false, // Switch for 'submitable' form
+	yesno_clicked: false, // Meh... Yes/No Radio Travis wanted...
+	stage2: false,	// Switch for enabling form stage #2 
 
 	defaults: {
 		email: '',
@@ -180,7 +184,25 @@ var Form = Backbone.Model.extend({
 		phone: '',
 		numKits: 0,
 		when: '',
+		necessary_info: false,
+		yesno_clicked: false,
 		stage2: false,
+	},
+
+	initialize: function() {
+		this.bind('change:name', this.checkNecessary);
+		this.bind('change:email', this.checkNecessary);
+	},
+	
+	checkNecessary: function() {
+		var name = this.get('name'),
+			email = this.get('email');
+		if(name && email) {
+			this.set('necessary_info', true);
+		}
+		else {
+			this.set('necessary_info', false);
+		}
 	},
 
 	// Upload the form data to Google Docs

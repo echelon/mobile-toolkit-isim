@@ -113,6 +113,49 @@ var FormStepView = StepView.extend({
 	},
 });
 
+// TODO TODO: Make final submit button a superclass of this so
+// that I can disable it if critical name & email info not filled.
+var SubmitOrNext = Backbone.View.extend({
+	id: 'form1_submit',
+	NEXT: 'Next <i class="icon-forward"></i>',
+	SUBMIT: 'Submit <i class="icon-thumbs-up"></i>',
+
+	initialize: function() {
+		this.$el = $('#'+this.id); // FIXME: inconsistent to not detach
+
+		// FIXME UGLY AND GLOBALS, but too sleepy to write nice
+		var that = this;
+		window.form.on('change:stage2', function() { that.render(); });
+		window.form.on('change:necessary_info', function() { that.render(); });
+		window.form.on('change:yesno_clicked', function() { that.render(); });
+	},
+
+	render: function() {
+		// Check model to see if incomplete 
+		if(!window.form.get('necessary_info') || 
+		   !window.form.get('yesno_clicked')) {
+				this.$el.attr('disabled', 'disabled');
+				this.$el.removeClass('btn-primary');
+				this.$el.addClass('disabled');
+				this.$el.find('i').removeClass('icon-white');
+				return;
+		}
+
+		// Check model to update button text
+		if(window.form.get('stage2')) {
+			this.$el.html(this.NEXT);
+		}
+		else {
+			this.$el.html(this.SUBMIT);
+		}
+
+		this.$el.removeAttr('disabled');
+		this.$el.removeClass('disabled');
+		this.$el.addClass('btn-primary');
+		this.$el.find('i').addClass('icon-white');
+	},
+});
+
 var RadioYesNo = Backbone.View.extend({
 	id: 'radio-yesno',
 	events: {
@@ -120,46 +163,55 @@ var RadioYesNo = Backbone.View.extend({
 		'click button[value=no]': 'clickNo',
 	},
 	initialize: function() {
-		this.$el = $('#radio-yesno').detach();
+		this.$el = $('#'+this.id).show().detach();
+		this.$el.data('wasClicked', false); // 3rd state aside from yes|no
 	},
-
 	clickYes: function(ev) {
+		window.form.set('yesno_clicked', true);
+		window.form.set('stage2', true);
+		this.$el.data('wasClicked', true);
+
 		this.$el.find('button[value=yes]').addClass('btn-success');
 		this.$el.find('button[value=yes]').removeClass('btn-inverse');
 		this.$el.find('button[value=no]').addClass('btn-inverse');
 		this.$el.find('button[value=no]').removeClass('btn-danger');
-		window.form.set('stage2', true);
 	},
-
 	clickNo: function(ev) {
+		window.form.set('yesno_clicked', true);
+		window.form.set('stage2', false);
+		this.$el.data('wasClicked', true);
+
 		this.$el.find('button[value=yes]').removeClass('btn-success');
 		this.$el.find('button[value=yes]').addClass('btn-inverse');
 		this.$el.find('button[value=no]').removeClass('btn-inverse');
 		this.$el.find('button[value=no]').addClass('btn-danger');
-		window.form.set('stage2', false);
 	},
-
 	reset: function() {
+		this.$el.data('wasClicked', false);
+		window.form.set('yesno_clicked', false);
+		window.form.set('stage2', false);
+
 		// Note: 'active' is bootstrap.js's managed, depressed state
 		this.$el.find('button[value=yes]').removeClass('active btn-success');
 		this.$el.find('button[value=no]').removeClass('active btn-danger');
 		this.$el.find('button[value=yes]').addClass('btn-inverse');
 		this.$el.find('button[value=no]').addClass('btn-inverse');
-		window.form.set('stage2', false);
 	},
 });
 
 var FormOneStepView = FormStepView.extend({
 	model: null,
 	className: 'stepView formStepView',
-	radio: new RadioYesNo(),
+	radio: null, 
+	submitButton: null,
 
 	// XXX: model must be set
 	initialize: function() {
 		var that = this;
 
-		// FIXME: Needed? 
-		// this.$el.attr('id', this.cid);
+		// FIXME: Poor form to create these here
+		this.radio = new RadioYesNo(), // FIXME
+ 		this.submitButton = new SubmitOrNext(), // FIXME
 
 		// Already in the page. Excise it.
 		this.$el = $('#form1').detach()
@@ -184,6 +236,11 @@ var FormOneStepView = FormStepView.extend({
 			that.resetForm();
 		});
 
+		window.form.on('change:stage1_filled', function() {
+			that.radio.render();
+			that.submitButton.render();
+		});
+
 		window.form.on('change:stage2', function() {
 			that.render();
 		});
@@ -201,10 +258,6 @@ var FormOneStepView = FormStepView.extend({
 		// Actually, may need to reapply to different event too
 		// depending on stage2 state...
 		this.$el.off('submit');
-
-		this.$el.button();
-		this.$el.find('button').on('click', function() {
-		});
 
 		if(window.form.get('stage2')) {
 			this.$el.on('submit', function(ev) { 
@@ -238,7 +291,7 @@ var FormOneStepView = FormStepView.extend({
 		}
 	},
 
-	// If email on one form changes, sync it.
+	// If name on one form changes, sync it.
 	syncName: function() {
 		var $name = this.$el.find('#name1'),
 			nm = window.form.get('name');
@@ -248,11 +301,20 @@ var FormOneStepView = FormStepView.extend({
 		}
 	},
 
+	checkFilled: function() {
+		var $email = this.$el.find('#email1'),
+			em = window.form.get('email'),
+			$name = this.$el.find('#name1'),
+			nm = window.form.get('name');
+
+	},
+
 	resetForm: function() {
 		this.$el.find('input').each(function() {
 			$(this).val('');
 		});
 		this.radio.reset();
+		this.submitButton.render();
 	},
 
 	submit: function() {
@@ -268,18 +330,9 @@ var FormOneStepView = FormStepView.extend({
 	},
 
 	render: function() {
-		var text = '';
 		this.$el.show();
+		this.submitButton.render();
 		this.eventBind();
-
-		if(window.form.get('stage2')) {
-			text = 'Next <i class="icon-forward icon-white"></i>';
-		}
-		else {
-			text = 'Submit <i class="icon-thumbs-up icon-white"></i>';
-		}
-
-		this.$el.find('#form1_submit').html(text);
 	},
 });
 

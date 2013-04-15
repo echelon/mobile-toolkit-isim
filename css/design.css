@@ -46,6 +46,10 @@ body {
 #application-nav {
   background-color: #cacac4;
 }
+.stepView {
+  overflow-y: auto;
+  height: 487px;
+}
 .icons .span12 {
   vertical-align: top;
 }
@@ -86,7 +90,9 @@ body {
   background-position: center;
 }
 .icons .added .iconInner {
-  -webkit-filter: grayscale(0.7) brightness(0.95) opacity(0.8);
+  -webkit-filter: grayscale(0.7) opacity(0.8);
+  /*brightness(0.95); iPad fail */
+
   visibility: inherit;
 }
 @media all and (min-width: 200px) {

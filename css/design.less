@@ -57,6 +57,10 @@ body {
 	background-color: darken(#e2e2df, 10%);
 }
 
+.stepView {
+	overflow-y: auto;
+	height: 487px;
+}
 
 // TODO: RENAME!
 .icons {
@@ -106,9 +110,9 @@ body {
 	}
 
 	.added .iconInner {
- 		-webkit-filter: grayscale(0.7) 
-						brightness(0.95)
+ 		-webkit-filter: grayscale(0.7)
 						opacity(0.80);
+						/*brightness(0.95); iPad fail */
 		visibility: inherit;
 	}
 

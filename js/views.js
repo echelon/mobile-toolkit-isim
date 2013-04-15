@@ -96,6 +96,9 @@ var StepView = Backbone.View.extend({
 var FormStepView = StepView.extend({
 	model: null,
 	className: 'stepView formStepView',
+	events: {
+		'keypress input': 'supressEnter',
+	},
 
 	// XXX: model must be set
 	initialize: function() {
@@ -111,6 +114,30 @@ var FormStepView = StepView.extend({
 	render: function() {
 		this.$el.show();
 	},
+
+	// Turn <enter> into <tab> per Travis' request
+	supressEnter: function(ev) {
+		var els = null,
+			i = 0,
+			j = 0;
+		if(ev.keyCode != 13) {
+			return true;
+		}
+		els = $(ev.target).parents('form')
+					 .eq(0)
+					 .find('input');
+					 //.find('input, button');
+		i = els.index(ev.target);
+		j = (i+1) % els.length;
+		try {
+			els[j].focus();
+			els[j].select();
+		}
+		catch(e) {
+		}
+		return false;
+	},
+
 });
 
 // TODO TODO: Make final submit button a superclass of this so
@@ -121,13 +148,19 @@ var SubmitOrNext = Backbone.View.extend({
 	SUBMIT: 'Submit <i class="icon-thumbs-up"></i>',
 
 	initialize: function() {
-		this.$el = $('#'+this.id); // FIXME: inconsistent to not detach
+		this.$el = $('#'+this.id); // FIXME: inconsist to not detach
 
 		// FIXME UGLY AND GLOBALS, but too sleepy to write nice
 		var that = this;
-		window.form.on('change:stage2', function() { that.render(); });
-		window.form.on('change:necessary_info', function() { that.render(); });
-		window.form.on('change:yesno_clicked', function() { that.render(); });
+		window.form.on('change:stage2', function() { 
+			that.render(); 
+		});
+		window.form.on('change:necessary_info', function() { 
+			that.render(); 
+		});
+		window.form.on('change:yesno_clicked', function() { 
+			that.render(); 
+		});
 	},
 
 	render: function() {
@@ -164,24 +197,28 @@ var RadioYesNo = Backbone.View.extend({
 	},
 	initialize: function() {
 		this.$el = $('#'+this.id).show().detach();
-		this.$el.data('wasClicked', false); // 3rd state aside from yes|no
+		this.$el.data('wasClicked', false); // 3rd state wrt yes|no
 	},
 	clickYes: function(ev) {
 		window.form.set('yesno_clicked', true);
+		window.form.set('yes_clicked', true);
 		window.form.set('stage2', true);
 		this.$el.data('wasClicked', true);
 
 		this.$el.find('button[value=yes]').addClass('btn-success');
-		this.$el.find('button[value=yes]').removeClass('btn-inverse');
+		this.$el.find('button[value=yes]')
+				.removeClass('btn-inverse');
 		this.$el.find('button[value=no]').addClass('btn-inverse');
 		this.$el.find('button[value=no]').removeClass('btn-danger');
 	},
 	clickNo: function(ev) {
 		window.form.set('yesno_clicked', true);
+		window.form.set('yes_clicked', false);
 		window.form.set('stage2', false);
 		this.$el.data('wasClicked', true);
 
-		this.$el.find('button[value=yes]').removeClass('btn-success');
+		this.$el.find('button[value=yes]')
+				.removeClass('btn-success');
 		this.$el.find('button[value=yes]').addClass('btn-inverse');
 		this.$el.find('button[value=no]').removeClass('btn-inverse');
 		this.$el.find('button[value=no]').addClass('btn-danger');
@@ -189,11 +226,14 @@ var RadioYesNo = Backbone.View.extend({
 	reset: function() {
 		this.$el.data('wasClicked', false);
 		window.form.set('yesno_clicked', false);
+		window.form.set('yes_clicked', false);
 		window.form.set('stage2', false);
 
 		// Note: 'active' is bootstrap.js's managed, depressed state
-		this.$el.find('button[value=yes]').removeClass('active btn-success');
-		this.$el.find('button[value=no]').removeClass('active btn-danger');
+		this.$el.find('button[value=yes]')
+				.removeClass('active btn-success');
+		this.$el.find('button[value=no]')
+				.removeClass('active btn-danger');
 		this.$el.find('button[value=yes]').addClass('btn-inverse');
 		this.$el.find('button[value=no]').addClass('btn-inverse');
 	},
@@ -208,6 +248,7 @@ var FormOneStepView = FormStepView.extend({
 	// XXX: model must be set
 	initialize: function() {
 		var that = this;
+		FormStepView.prototype.initialize.apply(this, arguments);
 
 		// FIXME: Poor form to create these here
 		this.radio = new RadioYesNo(), // FIXME
@@ -344,6 +385,7 @@ var FormTwoStepView = FormStepView.extend({
 	// XXX: model must be set
 	initialize: function() {
 		var that = this;
+		FormStepView.prototype.initialize.apply(this, arguments);
 
 		// FIXME: Needed? 
 		// this.$el.attr('id', this.cid);
@@ -998,9 +1040,9 @@ var AppView = Backbone.View.extend({
 			that.transition(); // Only call; does not need lock
 		}, this);
 
-		window.form.on('change:stage2', function() {
-			that.render();
-		});
+		window.form.on('change:stage2', function() { that.render(); });
+		window.form.on('change:yes_clicked', function() { that.render(); });
+		window.form.on('change:necessary_info', function() { that.render(); });
 
 		// Force hashchange if hash exists when page is
 		// initially loaded (ie. a direct HTTP GET)
@@ -1024,7 +1066,8 @@ var AppView = Backbone.View.extend({
 
 		if(this.steps.pos() == this.steps.end() ||
 		   (this.steps.pos() == this.steps.end()-1 && 
-			!window.form.get('stage2'))) {
+			(!window.form.get('necessary_info') || 
+			 !window.form.get('yes_clicked')))) {
 				this.nextButton.disable();
 		}
 		else {

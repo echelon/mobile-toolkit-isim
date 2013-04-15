@@ -173,6 +173,7 @@ var Form = Backbone.Model.extend({
 	// Model calculated metadata for the view to use
 	necessary_info: false, // Switch for 'submitable' form
 	yesno_clicked: false, // Meh... Yes/No Radio Travis wanted...
+	yes_clicked: false, // Double meh. Getting too tired to maintain
 	stage2: false,	// Switch for enabling form stage #2 
 
 	defaults: {
@@ -186,6 +187,7 @@ var Form = Backbone.Model.extend({
 		when: '',
 		necessary_info: false,
 		yesno_clicked: false,
+		yes_clicked: false,
 		stage2: false,
 	},
 

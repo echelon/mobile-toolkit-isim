@@ -1,8 +1,6 @@
-@tiny: ~"all and (min-width: 200px)"; 	// 80x80 icons
-@small: ~"all and (min-width: 580px)";	// 125x125 icons
-@medium: ~"all and (min-width: 820px)";	// 175x175 icons
-@large: ~"all and (min-width: 1000px)"; // 200x200 icons
-@huge: ~"all and (min-width: 1200px)";	// 250x250 icons
+/*****
+ * MACROS
+ *****/
 
 .border-radius(@rad) {
 	border-radius: @rad;
@@ -10,40 +8,87 @@
 	-webkit-border-radius: @rad;
 }
 
+.set_width(@size) { 
+	width: @size; 
+}
+
+.set_square(@size) { 
+	width: @size; 
+	height: @size; 
+}
+
 .noselect {
 	-moz-user-select: none;
 	-webkit-user-select: none;
 }
 
-.set_tiny_w { width: 80px; }
-.set_tiny {
-	width: 80px;
-	height: 80px;
+/*****
+ * SET UP RESPONSIVENESS BREAKPOINTS
+ *****/
+
+.icon, .iconInner { 
+	min-height: 50px;
+	min-width: 50px;
 }
 
-.set_small_w { width: 125px; }
-.set_small {
-	width: 125px;
-	height: 125px;
+// Smartphone portrait
+@media all and (max-width: 479px) {
+	.icon { .set_width(80px); }
+	.iconInner { .set_square(80px); }
 }
 
-.set_medium_w { width: 150px; }
-.set_medium {
-	width: 150px;
-	height: 150px;
+// Smartphone landscape
+@media all and (min-width: 480px) and (max-width: 599px) {
+	.icon { .set_width(100px); }
+	.iconInner { .set_square(100px); }
 }
 
-.set_large_w { width: 150px; }
-.set_large {
-	width: 150px;
-	height: 150px;
+// Tablet portrait
+@media all and (min-width: 600px) and (max-width: 768px) {
+	.icon { .set_width(100px); }
+	.iconInner { .set_square(100px); }
 }
 
-.set_huge_w { width: 150px; }
-.set_huge {
-	width: 150px;
-	height: 150px;
+// Tablet portrait (iPad)
+@media all and (min-width: 600px) 
+and (max-width: 768px) 
+and (orientation: portrait) {
+	.stepView { height: 746px; }
+	.icon { .set_width(125px); }
+	.iconInner { .set_square(125px); }
 }
+
+// Tablet landscape
+@media all and (min-width: 769px) and (max-width: 1024px) {
+	.icon { .set_width(125px); }
+	.iconInner { .set_square(125px); }
+}
+
+// Tablet landscape (iPad)
+@media all and (min-width: 769px) 
+and (min-device-width: 769px) 
+and (max-width: 1024px) 
+and (orientation: landscape) {
+	.stepView { height: 487px; }
+	.icon { .set_width(150px); }
+	.iconInner { .set_square(150px); }
+}
+
+// Desktop
+@media all and (min-width: 1025px) and (max-width: 1280px) {
+	.icon { .set_width(175px); }
+	.iconInner { .set_square(175px); }
+}
+
+// Huge Desktop
+@media all and (min-width: 1281px) {
+	.icon { .set_width(220px); }
+	.iconInner { .set_square(220px); }
+}
+
+/*****
+ * REST OF DESIGN (DISORGANIZED)
+ *****/
 
 body {
 	background-color: darken(#f5f5f4, 2%);
@@ -59,7 +104,6 @@ body {
 
 .stepView {
 	overflow-y: auto;
-	height: 487px;
 }
 
 // TODO: RENAME!
@@ -115,31 +159,6 @@ body {
 						/*brightness(0.95); iPad fail */
 		visibility: inherit;
 	}
-
-	@media @tiny {
-		.icon { .set_tiny_w; }
-		.iconInner { .set_tiny; }
-	}
-
-	@media @small {
-		.icon { .set_small_w; }
-		.iconInner { .set_small; }
-	}
-
-	@media @medium {
-		.icon { .set_medium_w; }
-		.iconInner { .set_medium; }
-	}
-
-	@media @large {
-		.icon { .set_large_w; }
-		.iconInner { .set_large; }
-	}
-
-	@media @huge {
-		.icon { .set_huge_w; }
-		.iconInner { .set_huge; }
-	}
 }
 
 /* OLD CSS RULES THAT NEED TO BE MERGED IN!!!
@@ -180,7 +199,7 @@ body {
 #AppView {
 	overflow: hidden;
 	text-align: center;
-	background-color: #f5f5f4;
+	//background-color: #f5f5f4;
 	color: #969696;
 }
 
@@ -228,7 +247,7 @@ form {
 	padding: 30px;
 }
 
-input[type=text] {
+input[type=text], input[type=email] {
 	height: 37px;
 }
 

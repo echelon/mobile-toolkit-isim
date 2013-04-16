@@ -228,6 +228,9 @@ input[type=text],
 input[type=email] {
   height: 37px;
 }
+label {
+  color: #898989;
+}
 .avgrund-popup {
   color: #111;
 }
@@ -239,7 +242,4 @@ input[type=email] {
 }
 .modal-buttons-right {
   float: right;
-}
-label {
-  color: #969696;
 }

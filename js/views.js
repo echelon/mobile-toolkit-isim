@@ -13,6 +13,25 @@ var StepView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'stepView',
 
+	render: function() {
+		this.show();
+	},
+
+	show: function() {
+		this.$el.show();
+	},
+
+	hide: function() {
+		this.$el.hide();
+	},
+
+	fadeOut: function(time, callback) {
+		this.$el.fadeOut(time, callback);
+	},
+});
+
+var ItemStepView = StepView.extend({
+
 	// XXX: model must be set
 	initialize: function() {
 		var that = this;
@@ -70,31 +89,13 @@ var StepView = Backbone.View.extend({
 			x.view.render();
 		});
 	},
-
-	render: function() {
-		this.show();
-	},
-
-	show: function() {
-		this.$el.show();
-	},
-
-	hide: function() {
-		this.$el.hide();
-	},
-
-	fadeOut: function(time, callback) {
-		this.$el.fadeOut(time, callback);
-	},
 });
-
 
 /* ======================================================== *\
  *					FORM STEP SCRIPTING						*
  * ======================================================== */
 
 var FormStepView = StepView.extend({
-	model: null,
 	className: 'stepView formStepView',
 	events: {
 		'keypress input': 'supressEnter',
@@ -139,108 +140,7 @@ var FormStepView = StepView.extend({
 
 });
 
-// TODO TODO: Make final submit button a superclass of this so
-// that I can disable it if critical name & email info not filled.
-var SubmitOrNext = Backbone.View.extend({
-	id: 'form1_submit',
-	NEXT: 'Next <i class="icon-forward"></i>',
-	SUBMIT: 'Submit <i class="icon-thumbs-up"></i>',
-
-	initialize: function() {
-		this.$el = $('#'+this.id); // FIXME: inconsist to not detach
-
-		// FIXME UGLY AND GLOBALS, but too sleepy to write nice
-		var that = this;
-		window.form.on('change:stage2', function() { 
-			that.render(); 
-		});
-		window.form.on('change:necessary_info', function() { 
-			that.render(); 
-		});
-		window.form.on('change:yesno_clicked', function() { 
-			that.render(); 
-		});
-	},
-
-	render: function() {
-		// Check model to see if incomplete 
-		if(!window.form.get('necessary_info') || 
-		   !window.form.get('yesno_clicked')) {
-				this.$el.attr('disabled', 'disabled');
-				this.$el.removeClass('btn-primary');
-				this.$el.addClass('disabled');
-				this.$el.find('i').removeClass('icon-white');
-				return;
-		}
-
-		// Check model to update button text
-		if(window.form.get('stage2')) {
-			this.$el.html(this.NEXT);
-		}
-		else {
-			this.$el.html(this.SUBMIT);
-		}
-
-		this.$el.removeAttr('disabled');
-		this.$el.removeClass('disabled');
-		this.$el.addClass('btn-primary');
-		this.$el.find('i').addClass('icon-white');
-	},
-});
-
-var RadioYesNo = Backbone.View.extend({
-	id: 'radio-yesno',
-	events: {
-		'click button[value=yes]': 'clickYes',
-		'click button[value=no]': 'clickNo',
-	},
-	initialize: function() {
-		this.$el = $('#'+this.id).show().detach();
-		this.$el.data('wasClicked', false); // 3rd state wrt yes|no
-	},
-	clickYes: function(ev) {
-		window.form.set('yesno_clicked', true);
-		window.form.set('yes_clicked', true);
-		window.form.set('stage2', true);
-		this.$el.data('wasClicked', true);
-
-		this.$el.find('button[value=yes]').addClass('btn-success');
-		this.$el.find('button[value=yes]')
-				.removeClass('btn-inverse');
-		this.$el.find('button[value=no]').addClass('btn-inverse');
-		this.$el.find('button[value=no]').removeClass('btn-danger');
-	},
-	clickNo: function(ev) {
-		window.form.set('yesno_clicked', true);
-		window.form.set('yes_clicked', false);
-		window.form.set('stage2', false);
-		this.$el.data('wasClicked', true);
-
-		this.$el.find('button[value=yes]')
-				.removeClass('btn-success');
-		this.$el.find('button[value=yes]').addClass('btn-inverse');
-		this.$el.find('button[value=no]').removeClass('btn-inverse');
-		this.$el.find('button[value=no]').addClass('btn-danger');
-	},
-	reset: function() {
-		this.$el.data('wasClicked', false);
-		window.form.set('yesno_clicked', false);
-		window.form.set('yes_clicked', false);
-		window.form.set('stage2', false);
-
-		// Note: 'active' is bootstrap.js's managed, depressed state
-		this.$el.find('button[value=yes]')
-				.removeClass('active btn-success');
-		this.$el.find('button[value=no]')
-				.removeClass('active btn-danger');
-		this.$el.find('button[value=yes]').addClass('btn-inverse');
-		this.$el.find('button[value=no]').addClass('btn-inverse');
-	},
-});
-
 var FormOneStepView = FormStepView.extend({
-	model: null,
-	className: 'stepView formStepView',
 	radio: null, 
 	submitButton: null,
 
@@ -377,9 +277,6 @@ var FormOneStepView = FormStepView.extend({
 
 
 var FormTwoStepView = FormStepView.extend({
-	model: null,
-	className: 'stepView formStepView',
-
 	// XXX: model must be set
 	initialize: function() {
 		var that = this;
@@ -616,7 +513,7 @@ var ThanksView = Backbone.View.extend({
 
 
 /* ======================================================== *\
- *					BUTTON ELEMENT SCRIPTING				*
+ *			  BUTTON AND MISC ELEMENT SCRIPTING				*
  * ======================================================== */
 
 var NavButton = Backbone.View.extend({
@@ -693,6 +590,104 @@ var NavButton = Backbone.View.extend({
 	}
 });
 
+// TODO TODO: Make final submit button a superclass of this so
+// that I can disable it if critical name & email info not filled.
+var SubmitOrNext = Backbone.View.extend({
+	id: 'form1_submit',
+	NEXT: 'Next <i class="icon-forward"></i>',
+	SUBMIT: 'Submit <i class="icon-thumbs-up"></i>',
+
+	initialize: function() {
+		this.$el = $('#'+this.id); // FIXME: inconsist to not detach
+
+		// FIXME UGLY AND GLOBALS, but too sleepy to write nice
+		var that = this;
+		window.form.on('change:stage2', function() { 
+			that.render(); 
+		});
+		window.form.on('change:necessary_info', function() { 
+			that.render(); 
+		});
+		window.form.on('change:yesno_clicked', function() { 
+			that.render(); 
+		});
+	},
+
+	render: function() {
+		// Check model to see if incomplete 
+		if(!window.form.get('necessary_info') || 
+		   !window.form.get('yesno_clicked')) {
+				this.$el.attr('disabled', 'disabled');
+				this.$el.removeClass('btn-primary');
+				this.$el.addClass('disabled');
+				this.$el.find('i').removeClass('icon-white');
+				return;
+		}
+
+		// Check model to update button text
+		if(window.form.get('stage2')) {
+			this.$el.html(this.NEXT);
+		}
+		else {
+			this.$el.html(this.SUBMIT);
+		}
+
+		this.$el.removeAttr('disabled');
+		this.$el.removeClass('disabled');
+		this.$el.addClass('btn-primary');
+		this.$el.find('i').addClass('icon-white');
+	},
+});
+
+var RadioYesNo = Backbone.View.extend({
+	id: 'radio-yesno',
+	events: {
+		'click button[value=yes]': 'clickYes',
+		'click button[value=no]': 'clickNo',
+	},
+	initialize: function() {
+		this.$el = $('#'+this.id).show().detach();
+		this.$el.data('wasClicked', false); // 3rd state wrt yes|no
+	},
+	clickYes: function(ev) {
+		window.form.set('yesno_clicked', true);
+		window.form.set('yes_clicked', true);
+		window.form.set('stage2', true);
+		this.$el.data('wasClicked', true);
+
+		this.$el.find('button[value=yes]').addClass('btn-success');
+		this.$el.find('button[value=yes]')
+				.removeClass('btn-inverse');
+		this.$el.find('button[value=no]').addClass('btn-inverse');
+		this.$el.find('button[value=no]').removeClass('btn-danger');
+	},
+	clickNo: function(ev) {
+		window.form.set('yesno_clicked', true);
+		window.form.set('yes_clicked', false);
+		window.form.set('stage2', false);
+		this.$el.data('wasClicked', true);
+
+		this.$el.find('button[value=yes]')
+				.removeClass('btn-success');
+		this.$el.find('button[value=yes]').addClass('btn-inverse');
+		this.$el.find('button[value=no]').removeClass('btn-inverse');
+		this.$el.find('button[value=no]').addClass('btn-danger');
+	},
+	reset: function() {
+		this.$el.data('wasClicked', false);
+		window.form.set('yesno_clicked', false);
+		window.form.set('yes_clicked', false);
+		window.form.set('stage2', false);
+
+		// Note: 'active' is bootstrap.js's managed, depressed state
+		this.$el.find('button[value=yes]')
+				.removeClass('active btn-success');
+		this.$el.find('button[value=no]')
+				.removeClass('active btn-danger');
+		this.$el.find('button[value=yes]').addClass('btn-inverse');
+		this.$el.find('button[value=no]').addClass('btn-inverse');
+	},
+});
 
 /* ======================================================== *\
  *					MAIN APP SCRIPTING						*
@@ -756,7 +751,7 @@ var AppView = Backbone.View.extend({
 				items: [],
 			});
 
-			var sv = new StepView({
+			var sv = new ItemStepView({
 				model: step,
 			});
 

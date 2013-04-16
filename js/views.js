@@ -105,8 +105,7 @@ var FormStepView = StepView.extend({
 	},
 
 	submit: function() {
-		// TODO: Redirect. 
-		// Perhaps open a modal 'Thanks' msg for about
+		// Open a modal 'Thanks' msg for about
 		// 5 seconds then redirect to main page
 		return false;
 	},
@@ -362,8 +361,7 @@ var FormOneStepView = FormStepView.extend({
 		window.form.set('items', window.itemList.addedString());
 		window.form.upload(null, null);
 
-		// TODO: Redirect. 
-		// Perhaps open a modal 'Thanks' msg for about
+		// Open a modal 'Thanks' msg for about
 		// 5 seconds then redirect to main page
 		window.thanks = new ThanksView();
 		window.thanks.show();
@@ -486,8 +484,7 @@ var FormTwoStepView = FormStepView.extend({
 		window.form.set('items', window.itemList.addedString());
 		window.form.upload(null, null);
 
-		// TODO: Redirect. 
-		// Perhaps open a modal 'Thanks' msg for about
+		// Open a modal 'Thanks' msg for about
 		// 5 seconds then redirect to main page
 		window.thanks = new ThanksView();
 		window.thanks.show();
@@ -514,14 +511,6 @@ var ItemView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'thingyView',
 
-	placeholder: 'http://placehold.it/80x80',
-
-	placeholder1: 'http://placehold.it/80x80/dd00dd/ffffff',
-	placeholder2: 'http://placehold.it/125x125/dd00dd/ffffff',
-	placeholder3: 'http://placehold.it/175x175/dd00dd/ffffff',
-	placeholder4: 'http://placehold.it/200x200/dd00dd/ffffff',
-	placeholder5: 'http://placehold.it/250x250/dd00dd/ffffff',
-
 	events: {
 		'click ': 'toggleCart',
 	},
@@ -536,18 +525,7 @@ var ItemView = Backbone.View.extend({
 				'url(\'/img/logos/ischool.png\')"></div>' +
 			'</div>' +
 			'<p>Icon Text</p>' +
-				/*'<img src="' + 
-					this.placeholder1 + '" class="size1">' +
-				'<img src="' + 
-					this.placeholder2 + '" class="size2">' +
-				'<img src="' + 
-					this.placeholder3 + '" class="size3">' +
-				'<img src="' + 
-					this.placeholder4 + '" class="size4">' +
-				'<img src="' + 
-					this.placeholder5 + '" class="size5">' +*/
-				
-				'</div>');
+			'</div>');
 
 		this.$el.find('p').text(this.model.get('title'));
 		this.$el.find('.iconInner').css({
@@ -567,20 +545,12 @@ var ItemView = Backbone.View.extend({
 			this.$el.removeClass('added');
 		}
 
-		/*src = this.placeholder; // TODO
-
-		this.$el.find('img').attr('src', src);*/
-
 		// FIXME -- why do I have to do this!?
 		this.delegateEvents();
 	},
 
 	toggleCart: function() {
 		this.model.set('added', !this.model.get('added'));
-	},
-
-	launchModal: function() {
-		this.model.modalView.show();
 	},
 
 	show: function() {
@@ -599,78 +569,6 @@ var ItemView = Backbone.View.extend({
  *					MODAL POPUP SCRIPTING					*
  * ======================================================== */
 
-var ModalView = Backbone.View.extend({
-	model: null,
-
-	tagName: 'div',
-	className: 'modalView avgrund-popup',
-
-	events: {
-		'click .addCart': 'addCart',
-		'click .removeCart': 'removeCart',
-		'click .closeCart': 'hide',
-	},
-
-	initialize: function() {
-		// Static rendering
-		$('body').prepend(this.$el);
-		this.$el.attr('id', 'modal-'+this.model.cid)
-			.html(
-				'<h2>' +
-					this.model.get('title')+
-				'</h2>' +
-				'<p>' +
-					this.model.get('description') +
-				'</p>' +
-				'<div class="modal-buttons row-fluid"></div>'
-			);
-
-	},
-
-	render: function() {
-		var btn = '<div class="modal-buttons-left">';
-		if(this.model.get('added')) {
-			btn += '<button class="btn btn-primary ' +
-					'removeCart">Remove</button>';
-		}
-		else {
-			btn += '<button class="btn btn-primary ' +
-					'addCart">Add</button>';
-		}
-		this.$el.find('.modal-buttons').html(
-				btn + 
-				'</div>' +
-				'<div class="modal-buttons-right">' +
-					'<button class="btn btn-primary ' +
-						'closeCart">Close</button>' +
-				'</div>' +
-            	'<div class="clearfix"></div>'
-			);
-	},
-
-	show: function() {
-		this.render();
-		this.$el.show();
-		Avgrund.show('#modal-'+this.model.cid);
-	},
-
-	addCart: function() {
-		this.model.set('added', true);
-		this.hide();
-	},
-
-	removeCart: function() {
-		this.model.set('added', false);
-		this.hide();
-	},
-
-	hide: function() {
-		this.$el.hide();
-		Avgrund.hide();
-	},
-});
-
-// TODO: Convert to ModalView subclass
 var ThanksView = Backbone.View.extend({
 	model: null,
 
@@ -878,13 +776,8 @@ var AppView = Backbone.View.extend({
 				var tv = new ItemView({
 					model: t,
 				});
-				// XXX: No modal views.
-				//var mv = new ModalView({
-				//		model: t,
-				//});
-
+				
 				t.view = tv;
-				//t.modalView = mv; // XXX: No modal views
 			
 				itemlist.push(t);
 				ths.push(t);

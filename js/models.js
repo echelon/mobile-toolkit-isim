@@ -23,7 +23,6 @@ var Item = Backbone.Model.extend({
 	title: null,	// Fuller title
 	description: null,
 	img: null,
-	imgAdded: null, 
 	added: false, // Whether user selected for 'cart'
 
 	defaults: {
@@ -33,7 +32,6 @@ var Item = Backbone.Model.extend({
 			'adipiscing elit. Nulla imperdiet enim quis ' +
 			'lorem pulvinar id tincidunt dolor porttitor.',
 		img: 'http://placehold.it/120x120/ee66ff/ffffff',
-		imgAdded: 'http://placehold.it/120x120/66eeff/ffffff',
 	},
 });
 

@@ -207,41 +207,41 @@ var Form = Backbone.Model.extend({
 
 	// Upload the form data to Google Docs
 	upload: function(callback, errback) {
-		var formkey = 'dEU4RjFZc2QwN2lfa1ZCeHowQ01qTWc6MQ',
-			url = 'https://docs.google.com/spreadsheet/' +
-					'formResponse?formkey=' + 
-					formkey +
-					'&embedded=true&ifq';
+		var key = '00D50000000JLJt',
+			url = 'https://www.salesforce.com/servlet/' +
+				  'servlet.WebToLead?encoding=UTF-8';
 
-		// TODO
+		// TODO: Less awkward progress indication
 		var s2 = this.get('stage2')? 'True' : 'False';
 
 		$.ajax({
 			url: url,
 			data: { 
 				// Our data
-				'entry.0.single': this.get('email'),
-				'entry.5.single': this.get('items'),
-				'entry.7.single': s2,
-				'entry.1.single': this.get('name'),
-				'entry.8.single': this.get('position'),
-				'entry.2.single': this.get('school'),
-				'entry.3.single': this.get('phone'),
-				'entry.4.single': this.get('numKits'),
-				'entry.9.single': this.get('when'),
+				'email': this.get('email'),
+				'00N50000002qXdY': this.get('items'),
+				'00N50000002qXdd': s2,
+				'last_name': this.get('name'),
+				'00N50000002qXay': this.get('position'),
+				'00N50000002qXdT': this.get('school'),
+				'phone': this.get('phone'),
+				'00N50000002qXbX': this.get('numKits'),
+				'00N50000002qXbS': this.get('when'),
 
-				// Form junk Google expects
-				pageNumber: 0,	
-				backupCache: 0,
-				submit: 'Submit',
+				// Form metadata Salesforce expects
+				'oid': key,
+				submit: 'submit',
+				retUrl: '',
+				//debug: 1,
+				//debugEmail: 'echelon@gmail.com',
 			},
 			type: 'POST',
 			dataType: 'html',
 			success: function(data, textStatus, xhr) {
-				//callback();
+				console.log('POST success');
 			},
 			error: function(xhr, textStatus, errorThrown) {
-				//errback();
+				console.log('POST error');
 			},
 		});
 

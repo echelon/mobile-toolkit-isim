@@ -75,8 +75,16 @@ var Step = Backbone.Model.extend({
 	view: null, // StepView
 
 	// Model data
+	// FIXME FIXME FIXME
+	// TODO: This is the wrong place. DELETE ASAP
 	title: null,
 	urlhash: null, // TODO: URL NAVIGABLE
+
+	defaults: {
+		title: 'Untitled Step',
+		urlhash: '', // TODO: Not implemented afaik
+		name: 'step', // Unique name TODO: Force unique (!)
+	},
 });
 
 var ItemStep = Step.extend({
@@ -99,16 +107,35 @@ var StepList = Backbone.Collection.extend({
 	_cur: 0,
 	_last: 0,
 
-	current: function() { 
-		return this.at(this._cur); 
-	},
+	/////////// STEP ACCESSORS /////////////
+	// These do *not* trigger a change event!
+
+	current: function() { return this.at(this._cur); }, // TODO DEPR
+	getCurrent: function() { return this.at(this._cur); },
+	getNext: function() { return this.at(this.nextId()); },
+	getPrev: function() { return this.at(this.prevId()); },
 
 	/////////// POINTERS /////////////
 
 	pos: function() { return this._cur; },
 	end: function() { return this.length - 1; },
 
+	nextId: function() {
+		if(this._cur >= this.length - 1) {
+			return this._cur;
+		}
+		return this._cur + 1;
+	},
+
+	prevId: function() {
+		if(this._cur <= 0) {
+			return 0;
+		}
+		return this._cur - 1;
+	},
+
 	/////////// NAVIGATION ///////////
+	// These *DO* trigger a change event!
 
 	next: function() {
 		if(this._cur >= this.length - 1) {

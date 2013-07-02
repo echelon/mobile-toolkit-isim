@@ -12,6 +12,9 @@ function print_status() {
 	echo ''
 }
 
+print_status 'Compiling LESS'
+lessc --yui-compress css/design.less > css/design.out.css
+
 #
 # DREAMHOST STATIC STAGING
 #

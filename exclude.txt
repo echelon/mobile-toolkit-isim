@@ -5,3 +5,4 @@ img/ASSET_ORIGINAL
 *pyc
 deploy_production.sh
 deploy_staging.sh
+README.md

@@ -250,7 +250,7 @@ var Form = Backbone.Model.extend({
 				'00N50000002qXdd': s2,
 				'last_name': this.get('name'),
 				'00N50000002qXay': this.get('position'),
-				'00N50000002qXdT': this.get('school'),
+				'company': this.get('school'),
 				'phone': this.get('phone'),
 				'00N50000002qXbX': this.get('numKits'),
 				'00N50000002qXbS': this.get('when'),

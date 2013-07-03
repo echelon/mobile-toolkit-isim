@@ -239,21 +239,28 @@ var Form = Backbone.Model.extend({
 				  'servlet.WebToLead?encoding=UTF-8';
 
 		// TODO: Less awkward progress indication
-		var s2 = this.get('stage2')? 'True' : 'False';
+		var s2 = this.get('stage2')? 'True' : 'False',
+			rating = this.get('stage2')? 'Warm' : 'Cold';
 
 		$.ajax({
 			url: url,
 			data: { 
 				// Our data
-				'email': this.get('email'),
+				email: this.get('email'),
+				last_name: this.get('name'),
+				company: this.get('school'),
+				phone: this.get('phone'),
+				title: this.get('position'),
+
+				'00N50000002qXdd': s2, // reached stage two
 				'00N50000002qXdY': this.get('items'),
-				'00N50000002qXdd': s2,
-				'last_name': this.get('name'),
-				'00N50000002qXay': this.get('position'),
-				'company': this.get('school'),
-				'phone': this.get('phone'),
+				'00N50000002qXay': this.get('position'), // XXX: Duplicate
 				'00N50000002qXbX': this.get('numKits'),
 				'00N50000002qXbS': this.get('when'),
+
+				// Extra metadata
+				lead_source: 'toolkit',
+				rating: rating,
 
 				// Form metadata Salesforce expects
 				'oid': key,

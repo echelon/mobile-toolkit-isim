@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 	// TODO: Write jQuery, Backbone, etc. dependencies
 	// TODO: Remove old dependencies that are no longer used
 	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-less');
+	grunt.loadNpmTasks('grunt-contrib-less');
 
 	// TODO: jslint, build tests, etc.
 	//grunt.registerTask('test', ['todo1', 'todo2']);

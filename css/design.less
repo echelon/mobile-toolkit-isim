@@ -1,8 +1,17 @@
 /**
  * Stylesheets are written in LessCSS.
+ * Some CSS libraries are imported (Bootstrap, Avgrund)
  * Copyright (c) 2013 Brandon Thomas
  * http://brand.io <bt@brand.io>
  */
+
+// CSS Libraries
+@import "lib/bootstrap.css";
+@import "lib/bootstrap-responsive.css";
+@import "lib/avgrund.css";
+
+// Our internal LESS
+@import "fonts.less";
 
 ///////////
 // MACROS
@@ -28,40 +37,6 @@
 	-webkit-user-select: none;
 }
 
-///////////
-// FONTS
-///////////
-
-@font_weight_light: 300;
-@font_weight_regular: 400;
-@font_weight_bold: 600;
-
-//@import url(http://fonts.googleapis.com/css?family=Droid+Sans|Lato|Arvo|Philosopher|Quicksand|Ubuntu|Raleway|Roboto+Slab|Open+Sans|Krona+One);
-//@import url(http://fonts.googleapis.com/css?family=Raleway);
-
-@font-face {
-	font-family: 'Bryant Alternate';
-	font-weight: @font_weight_light;
-	src: 
-		url('/font/bryant/light-alternate.otf')
-		format('opentype');
-}
-
-@font-face {
-	font-family: 'Bryant Alternate';
-	font-weight: @font_weight_regular;
-	src: 
-		url('/font/bryant/regular-alternate.otf')
-		format('opentype');
-}
-
-@font-face {
-	font-family: 'Bryant Alternate';
-	font-weight: @font_weight_bold;
-	src: 
-		url('/font/bryant/medium-alternate.otf')
-		format('opentype');
-}
 
 //////////////////////////////////////
 // SET UP RESPONSIVENESS BREAKPOINTS

@@ -241,20 +241,48 @@ body {
 
 #nav-back {
 	background-image: url('../img/back.png') no-repeat;
-	width: 60px;
-	height: 60px;
+	//width: 60px;
+	//height: 60px;
 }
 #nav-restart {
 	background-image: url('../img/back.png') no-repeat;
-	width: 60px;
-	height: 60px;
+	//width: 60px;
+	//height: 60px;
 }
 
 .ourbutton {
 	border: none;
+	margin: 0;
 	margin-left: 20px;
 	margin-right: 20px;
 	background-color: rgba(0, 0, 0, 0);
+}
+
+#application-nav {
+	.btn-group {
+		padding: 0;
+		margin: 0;
+	}
+	button {
+		padding: 0;
+		border: 0;
+	}
+	img {
+		padding: 0;
+		border: 0;
+	}
+}
+
+// Bottom nav buttons must be responsive to small viewports
+@media all and (max-width: 400px) {
+	#nav-next, #nav-back, #nav-restart  {
+		img { height: 40px; }
+	}
+}
+@media all and (max-width: 300px) {
+	#nav-next, #nav-back, #nav-restart  {
+		img { height: 30px; }
+	}
 }
 
 form {
